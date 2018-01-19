@@ -1,0 +1,202 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+		<title>Cours BASH</title>
+
+		<link rel="stylesheet" href="css/reveal.css">
+		<link rel="stylesheet" href="css/theme/black.css">
+
+		<!-- Theme used for syntax highlighting of code -->
+		<link rel="stylesheet" href="lib/css/zenburn.css">
+
+		<!-- Printing and PDF exports -->
+		<script>
+			var link = document.createElement( 'link' );
+			link.rel = 'stylesheet';
+			link.type = 'text/css';
+			link.href = window.location.search.match( /print-pdf/gi ) ? 'css/print/pdf.css' : 'css/print/paper.css';
+			document.getElementsByTagName( 'head' )[0].appendChild( link );
+		</script>
+	</head>
+	<body>
+		<div class="reveal">
+			<div class="slides">
+				<section>
+					<h1>BASH</h1>
+					<p class="fragment highlight-green visible">ludovic.drouineau@isen-ouest.yncrea.fr</p>
+					<p>CIR3 2017-2018</p>
+				</section>
+				<section>
+					<section>
+						<h2>Ce qui pourrait être utile avant de débuter</h2>
+						<p>Installer Ubuntu sur Windows 10</p>
+						<a href="https://korben.info/installer-shell-bash-linux-windows-10.html">https://korben.info/installer-shell-bash-linux-windows-10.html</a>
+					</section>
+					<section>
+						<h2>Shell <=> coquille</h2>
+						<p>La coquille qui entoure le système</p>
+					</section>
+					<section>
+						<h2>Un peu d'histoire:</h2>
+						<img data-src="cir3/images/frise.jpg">
+					</section>
+					<section>
+						<h2>Du bon vieux code C...</h2>
+						<a href="http://savannah.gnu.org/projects/bash/">http://savannah.gnu.org/projects/bash/</a>
+					</section>
+					<section>
+						<h2>Des bugs...</h2>
+						<img width="200px" height="200px" data-src="cir3/images/shellshock.png">
+						<p>shellsock exploit</p>
+						<pre>
+							<code class="hljs">env x='() { :;}; echo vulnerable' bash -c "echo this is a test"</code>
+						</pre>
+					</section>
+					<section>
+						<h2> Différents shell </h2>
+						<ul>
+							<li>sh</li>
+							<li>csh</li>
+							<li>tcsh</li>
+							<li>bash</li>
+							<li>zsh</li>
+							<li>...</li>
+						</ul>
+					</section>
+					<section>
+						<p>Quels shells je dispose ?</p>
+						<pre><code class="hljs">more /etc/shells</code></pre>
+						<p>Quel shell j'utilise ?</p>
+						<pre><code class="hljs">echo $SHELL</code></pre>
+					</section>
+				</section>
+
+				<section>
+					<h2>Le système de fichier</h2>
+					<img src="cir3/images/filesystem-2.png"/>
+				</section>
+				<section>
+					<h2>Les fichiers de configuration</h2>
+					<ul>
+						<li>login shell
+							<ul>
+								<li>/etc/profile</li>
+								<li>~/.profile</li>
+							</ul>
+						</li>
+						<li>non login shell
+							<ul>
+								<li>~/.bashrc</li>
+							</ul>
+						</li>
+					</ul>
+				</section>
+				<section>
+					<section>
+						<h2>Le prompt</h2>
+						<pre><code class="hljs">$PS1</code></pre>
+					</section>
+					<section>
+							<h2>Quelques raccourcis:</h2>
+							<img src="cir3/images/prompt1.jpg">
+					</section>
+					<section>
+						<h2>Les différents prompts:</h2>
+						<img src="cir3/images/prompt2.jpg">
+					</section>
+				</section>
+				<section>
+					<h2>Rappel sur les commandes:</h2>
+					<pre><code class="hljs">commande [options] arguments</code></pre>
+					<p><b>"["</b> est une commande</p>
+				</section>
+				<section>
+					<h2>La bible: man</h2>
+					<pre><code class="hljs">man [–s section] commande </code></pre>
+					<ol>
+						<li>Commandes utilisateur</li>
+						<li>Appels système</li>
+						<li>Fonctions de bibliothèque</li>
+						<li>Fichiers spéciaux</li>
+						<li>Formats de fichier</li>
+						<li>Jeux</li>
+						<li>Divers</li>
+						<li>Administration système</li>
+						<li>Interface du noyau Linux</li>
+					</ol>
+				</section>
+				<section>
+					<h2>Les fichiers:</h2>
+					<img src="cir3/images/filerights.jpg"/>
+				</section>
+				<section>
+					<section>
+						<h2>Complétion automatique</h2>
+						<p>.bashrc</p>
+						<pre><code class="hljs">
+if [ -f /etc/bash_completion ] ; then
+. /etc/bash_completion
+fi
+						</code></pre>
+					</section>
+					<section>
+						<h2>Historique des commandes</h2>
+						<p>.bash_history</p>
+						<pre><code class="hljs">HISTCONTROL=ignoredups #doublons</code> </pre>
+						<pre><code class="hljs">HISTCONTROL=ignorespace #espace</code> </pre>
+						<pre><code class="hljs">HISTTIMEFORMAT= " %D %H :%M " #date</code> </pre>
+						<pre><code class="hljs">HISTFILESIZE=1000 #taille</code> </pre>
+						<pre><code class="hljs">shopt –s histappend #d'une session à l'autre</code> </pre>
+				</section>
+					<section>
+						<h2>Alias</h2>
+						<pre><code class="hljs">alias la=’ls –la’</code> </pre>
+						<pre><code class="hljs">alias cdscript=’cd ~/scripts’</code> </pre>
+					</section>
+					<section>
+						<h2>Raccourcis dans le shell</h2>
+						<img src="cir3/images/raccourcishell.jpg"/>
+					</section>
+				</section>
+				<section>
+					<section>
+						<h2>Commande internes et externes</h2>
+						<ul>
+							<li>Exemple de commande interne: cd</li>
+							<li>Exemple de commande externe: ls</li>
+						</ul>
+						<pre></pre>
+					</section>
+					<section>
+						<h2>Les variables d'environnement</h2>
+						<img src="cir3/images/environnement.jpg"/>
+						<pre><code class="hljs">
+~$ echo $PATH
+/usr/bin:/bin:/usr/local/bin
+						</code> </pre>
+					</section>
+				</section>
+			</div>
+		</div>
+
+		<script src="lib/js/head.min.js"></script>
+		<script src="js/reveal.js"></script>
+
+		<script>
+			// More info about config & dependencies:
+			// - https://github.com/hakimel/reveal.js#configuration
+			// - https://github.com/hakimel/reveal.js#dependencies
+			Reveal.initialize({
+				dependencies: [
+					{ src: 'plugin/markdown/marked.js' },
+					{ src: 'plugin/markdown/markdown.js' },
+					{ src: 'plugin/notes/notes.js', async: true },
+					{ src: 'plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } }
+				]
+			});
+		</script>
+	</body>
+</html>
