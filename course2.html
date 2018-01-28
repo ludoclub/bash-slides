@@ -1,52 +1,249 @@
 <!doctype html>
 <html>
-	<head>
-		<meta charset="utf-8">
-		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
-		<title>Cours BASH</title>
+    <title>Cours BASH</title>
 
-		<link rel="stylesheet" href="css/reveal.css">
-		<link rel="stylesheet" href="css/theme/black.css">
+    <link rel="stylesheet" href="css/reveal.css">
+    <link rel="stylesheet" href="css/theme/black.css">
 
-		<!-- Theme used for syntax highlighting of code -->
-		<link rel="stylesheet" href="lib/css/zenburn.css">
+    <!-- Theme used for syntax highlighting of code -->
+    <link rel="stylesheet" href="lib/css/zenburn.css">
 
-		<!-- Printing and PDF exports -->
-		<script>
-			var link = document.createElement( 'link' );
-			link.rel = 'stylesheet';
-			link.type = 'text/css';
-			link.href = window.location.search.match( /print-pdf/gi ) ? 'css/print/pdf.css' : 'css/print/paper.css';
-			document.getElementsByTagName( 'head' )[0].appendChild( link );
-		</script>
-	</head>
-	<body>
-		<div class="reveal">
-			<div class="slides">
-				<section>
-					<h1>BASH</h1>
-					<p class="fragment highlight-green visible">ludovic.drouineau@isen-ouest.yncrea.fr</p>
-					<p>CIR3 2017-2018</p>
-				</section>
-			</div>
-		</div>
+    <!-- Printing and PDF exports -->
+    <script>
+        var link = document.createElement('link');
+        link.rel = 'stylesheet';
+        link.type = 'text/css';
+        link.href = window.location.search.match(/print-pdf/gi) ? 'css/print/pdf.css' : 'css/print/paper.css';
+        document.getElementsByTagName('head')[0].appendChild(link);
+    </script>
+</head>
+<body>
+<div class="reveal">
+    <div class="slides">
+        <section>
+            <h2>BASH: Beginners</h2>
+            <p class="fragment highlight-green visible">ludovic.drouineau@isen-ouest.yncrea.fr</p>
+            <p>CIR3 2017-2018</p>
+        </section>
+        <section>
+            <h2>Mon premier script</h2>
+            <pre><code class="hljs">
+$ vim myscript
+------------------
+#!/bin/bash
+echo "hello world"
+------------------
+$ chmod +x myscript
+$ ./myscript
+</code> </pre>
+        </section>
+        <section>
+            <h2>shebang</h2>
+            <a href="https://en.wikipedia.org/wiki/Shebang_%28Unix%29">https://en.wikipedia.org/wiki/Shebang_%28Unix%29</a>
+        </section>
+        <section>
+            <h2>Debugger un script</h2>
+            <pre><code class="hljs">str="Hello World"
+#!/bin/bash -x
+</code> </pre>
+        </section>
+        <section>
+            <section>
+                <h2>Les variables</h2>
+                <p>Les variables sont non typées</p>
+                <p><b>Pas d'espaces entre le caractère égal</b></p>
+                <pre><code class="hljs">str="Hello World"
+echo $str
+var=7+8
+echo$var</code> </pre>
+            </section>
+            <section>
+                <h2>Les différents types de variables</h2>
+                <img src="cir3/images/variables_speciales.jpg">
+            </section>
+        </section>
+        <section>
+            <section>
+                <h2>Echo</h2>
+                <ul>
+                    <li>-n Do not output the trailing new line.</li>
+                    <li> -e Enable interpretation of the following backslash escaped characters in the strings:</li>
+                    <ul>
+                        <li> \a alert (bell)</li>
+                        <li> \b backspace</li>
+                        <li> \c suppress trailing new line</li>
+                        <li> \n new line</li>
+                        <li> \r carriage return</li>
+                        <li> \t horizontal tab</li>
+                        <li> \\ backslash</li>
+                    </ul>
+                </ul>
+            </section>
+            <section>
+                <h2>Read</h2>
+                <pre><code class="hljs">
+read var1, var2, ... varN
+echo "Appuyer sur une touche pour continuer"
+read
+                </code></pre>
+            </section>
+        </section>
+        <section>
+            <section>
+                <h2>Structures conditionnelles</h2>
+                <pre><code class="hljs">
+if condition ; then
+…
+fi
 
-		<script src="lib/js/head.min.js"></script>
-		<script src="js/reveal.js"></script>
+if condition
+then
+…
+fi
 
-		<script>
-			// More info about config & dependencies:
-			// - https://github.com/hakimel/reveal.js#configuration
-			// - https://github.com/hakimel/reveal.js#dependencies
-			Reveal.initialize({
-				dependencies: [
-					{ src: 'plugin/markdown/marked.js' },
-					{ src: 'plugin/markdown/markdown.js' },
-					{ src: 'plugin/notes/notes.js', async: true },
-					{ src: 'plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } }
-				]
-			});
-		</script>
-	</body>
+if condition ; then
+…
+else
+…
+fi
+
+if condition_1 ; then
+…
+elif condition_2 ; then
+…
+elif condition_3 ; then
+…
+fi</code></pre>
+            </section>
+            <section>
+                <h2>Les conditions</h2>
+                <pre><code class="hljs">
+[ 2 –lt 3 ]
+test 2 –lt 3</code></pre>
+                <pre><code class="hljs">
+[[ 2 –lt 3 ]]
+a=1;b=2
+[[ $a -lt $b && 2 -lt 3 ]]
+</code></pre>
+            </section>
+            <section>
+                <h2>Les opérateurs de test</h2>
+                <img src="cir3/images/opearith.jpg">
+            </section>
+            <section>
+                <h2>Les opérateurs de test sur les fichiers</h2>
+                <img src="cir3/images/opefile.jpg">
+            </section>
+            <section>
+                <h2>Les opérateurs logiques</h2>
+                <pre><code class="hljs">
+[ ! 10 –lt 5]
+[$var –ge 1] && [$var –le 10]
+
+~$ info coreutils 'test invocation'
+</code></pre>
+            </section>
+        </section>
+        <section>
+            <h2>La structure case</h2>
+            <pre><code class="hljs">
+#!/bin/bash
+echo "Donnez un chiffre entre 1 et 4 :"
+read choix
+case $choix in
+1) echo "un";;
+2) echo "deux";;
+3) echo "trois";;
+4) echo "quatre";;
+*) echo "ERREUR"
+esac
+</code></pre>
+        </section>
+        <section>
+            <section>
+                <h2>Les boucles: while</h2>
+                <pre><code class="hljs">
+#!/bin/bash
+i=1
+while [ $i –le 100 ]; do
+ echo $ix7=$(($i*7))
+ i=$(($i+1))
+done
+                </code></pre>
+            </section>
+            <section>
+                <h2>Les boucles: until</h2>
+                <pre><code class="hljs">
+#!/bin/bash
+i=1
+until [ $i –gt 100 ]; do
+ echo $i*7=$(($i*7))
+ i=$(($i+1))
+done
+                </code></pre>
+            </section>
+            <section>
+                <h2>Les boucles: for</h2>
+                <p> <b>Parcours d'une liste: </b></p>
+                <p>Un liste : suite d'éléments séparés par un espace</p>
+                <pre><code class="hljs">
+"chaine" 1 2 "autre chaine" 3 4 5
+                </code></pre>
+                <pre><code class="hljs">
+for variable in liste ; do
+ ...
+done
+                </code></pre>
+            </section>
+            <section>
+                <h2>Select</h2>
+                <pre><code class="hljs">
+# !/bin/bash
+select choix in "entree 1" "entree 2" ; do
+ echo "Vous avez choisi" $choix
+done
+                </code></pre>
+                <p>boucle à l'infini => break</p>
+                <pre><code class="hljs">
+# !/bin/bash
+select choix in "entree 1" "entree 2" "q"; do
+ case $choix in
+    "entree 1" | "entree 2") echo "Vous avez choisi" $choix ;;
+    "q") echo "Au revoir…"
+ break ;;
+ *) echo "Saisie non valide !"
+ esac
+done
+                </code></pre>
+
+            </section>
+        </section>
+    </div>
+</div>
+
+<script src="lib/js/head.min.js"></script>
+<script src="js/reveal.js"></script>
+
+<script>
+    // More info about config & dependencies:
+    // - https://github.com/hakimel/reveal.js#configuration
+    // - https://github.com/hakimel/reveal.js#dependencies
+    Reveal.initialize({
+        dependencies: [
+            {src: 'plugin/markdown/marked.js'},
+            {src: 'plugin/markdown/markdown.js'},
+            {src: 'plugin/notes/notes.js', async: true},
+            {
+                src: 'plugin/highlight/highlight.js', async: true, callback: function () {
+                hljs.initHighlightingOnLoad();
+            }
+            }
+        ]
+    });
+</script>
+</body>
 </html>

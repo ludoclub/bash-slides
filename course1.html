@@ -178,6 +178,42 @@ fi
 /usr/bin:/bin:/usr/local/bin
 						</code> </pre>
 					</section>
+					<section>
+						<h2>La gestion des processus</h2>
+						<p>Lancer en arrière plan: "&"</p>
+						<pre><code class="hljs">
+>fg
+>bg
+>jobs -l
+						</code> </pre>
+						<p>Les signaux: </p>
+						<img src="cir3/images/signaux.jpg"/>
+					</section>
+				</section>
+				<section>
+					<section>
+						<h2>La signalisation</h2>
+						<p>La redirection:</p>
+						<img src="cir3/images/redirection.jpg"/>
+						<ul>
+							<li>Enchainement de commandes: ";" "&"</li>
+							<li>Enchainement conditionnel: "||" "&&" </li>
+						</ul>
+					</section>
+					<section>
+						<h2>Substitution de commande</h2>
+						<pre><code class="hljs">
+$(ls -la)
+kill `pidof gedit`
+						</code></pre>
+					</section>
+					<section>
+						<h2>Les expressions régulières</h2>
+						<img src="cir3/images/regex.jpg"/>
+						<pre><code class="hljs">
+ls -la | egrep '.txt$'
+						</code></pre>
+					</section>
 				</section>
 			</div>
 		</div>

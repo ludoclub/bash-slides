@@ -1,0 +1,238 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+    <title>Cours BASH</title>
+
+    <link rel="stylesheet" href="css/reveal.css">
+    <link rel="stylesheet" href="css/theme/black.css">
+
+    <!-- Theme used for syntax highlighting of code -->
+    <link rel="stylesheet" href="lib/css/zenburn.css">
+
+    <!-- Printing and PDF exports -->
+    <script>
+        var link = document.createElement('link');
+        link.rel = 'stylesheet';
+        link.type = 'text/css';
+        link.href = window.location.search.match(/print-pdf/gi) ? 'css/print/pdf.css' : 'css/print/paper.css';
+        document.getElementsByTagName('head')[0].appendChild(link);
+    </script>
+</head>
+<body>
+<div class="reveal">
+    <div class="slides">
+        <section>
+            <h2>BASH: Expert</h2>
+            <p class="fragment highlight-green visible">ludovic.drouineau@isen-ouest.yncrea.fr</p>
+            <p>CIR3 2017-2018</p>
+        </section>
+        <section>
+            <section>
+                <h2>Shell de login / non-login</h2>
+                <p>Shell de login:</p>
+                <ul>
+                    <li>ssh</li>
+                    <li>bash -l</li>
+                    <li>sudo -i</li>
+                    <li>sudo -u username -i</li>
+                </ul>
+            </section>
+            <section>
+                <h2>Shell intéractif / non intéractif</h2>
+                <p>Shell intéractif: entrée et sortie connectées à un terminal</p>
+                <p>La variable PS1 existe</p>
+                <p>"$-" contient la lettre i</p>
+                <p>Un shell lancé depuis un script est non intéractif</p>
+            </section>
+            <section>
+                <h2>Les fichiers de configuration</h2>
+                <p style="color: limegreen">Shell login intéractif:</p>
+                <ul>
+                    <li>/etc/profile</li>
+                    <li>~/bash_profile</li>
+                </ul>
+                <p style="color: limegreen">shell intéractif non-login</p>
+                <ul>
+                    <li>~/.bashrc</li>
+                </ul>
+                <p style="color: limegreen">shell non intéractif</p>
+                <ul>
+                    <li>fichier dans $BASH_ENV</li>
+                </ul>
+            </section>
+        </section>
+        <section>
+            <section>
+                <h2>Les chaines de caractères</h2>
+                <p>Protection d'un caractère : "\"</p>
+                <pre><code class="hljs">
+echo *
+echo \*
+echo \\
+                </code> </pre>
+                <p>Permettre de continuer à la ligne suivante</p>
+                <pre><code class="hljs">
+echo Hello \
+> World!
+                </code> </pre>
+            </section>
+            <section>
+                <h2>Protection à l'aide des quotes et double quotes</h2>
+                <pre><code class="hljs">
+echo "< * $PWD * >"
+echo '< * $PWD * >'
+            </code> </pre>
+            </section>
+            <section>
+                <h2>Longueur d'une chaine de caractères</h2>
+                <pre><code class="hljs">
+chaine="bonjour tout le monde"
+echo $chaine
+echo ${#chaine}
+# Avec les
+set "may the force"
+echo ${#1}
+            </code> </pre>
+            </section>
+            <section>
+                <h2>Modificateur de chaines</h2>
+                <p style="color: aqua">Suppression de la plus courte sous-chaine à gauche</p>
+                <pre><code class="hljs">
+${chaine#modele}
+chaine="bonjour tout le monde"
+echo ${chaine#*ou}
+                </code> </pre>
+                <p style="color: aqua">Suppression de la plus longue sous-chaine à gauche</p>
+                <pre><code class="hljs">
+${chaine##modele}
+chaine="bonjour tout le monde"
+echo ${chaine##*ou}
+                </code> </pre>
+            </section>
+            <section>
+                <h2>Modificateur de chaines</h2>
+                <p style="color: aqua">Suppression de la plus courte sous-chaine à droite</p>
+                <pre><code class="hljs">
+${chaine%modele}
+chaine="bonjour tout le monde"
+echo ${chaine%ou*}
+                </code> </pre>
+                <p style="color: aqua">Suppression de la plus longue sous-chaine à droite</p>
+                <pre><code class="hljs">
+${chaine%%modele}
+eleve="Pierre;10;12;16"
+echo ${chaine%%;*}
+                </code> </pre>
+            </section>
+            <section>
+                <h2>Extraction de sous-chaines</h2>
+                <p style="color: aqua">${chaine:indice}</p>
+                <pre><code class="hljs">
+chaine="0123456"
+echo ${chaine:3}
+                </code> </pre>
+                <p style="color: aqua">${chaine:indice:nb}</p>
+                <pre><code class="hljs">
+chaine="0123456"
+echo ${chaine:3:2}
+                </code> </pre>
+            </section>
+            <section>
+                <h2>Remplacement de chaines</h2>
+                <p style="color: aqua">${chaine/mod/ch}</p>
+                <pre><code class="hljs">
+chaine="Luke:Obiwan:Han"
+# Remplace la première occurence
+echo ${chaine/:/ }
+# Remplace toutes les occurences
+echo ${chaine//:/ }
+                </code> </pre>
+            </section>
+        </section>
+        <section>
+            <section>
+                <h2>Les tableaux</h2>
+                <h3>Définition et initialisation</h3>
+                <pre><code class="hljs">
+# liste des tableaux déclarés
+declare -a
+# declaration d'un tableau
+declare -a tab</code> </pre>
+                <pre><code class="hljs">
+read tab[1] tab[3]
+# initialisation d'un tableau
+tab=([1]=coucou [3]=hello)
+</code> </pre>
+                <pre><code class="hljs">
+echo ${tab[1]}
+                </code> </pre>
+            </section>
+            <section>
+                <h2>Caractéristiques d'un tableau</h2>
+                <pre><code class="hljs">
+# Nombre d'éléments initialisés d'un tableau
+echo ${#tab[*]}
+# Tous les éléments du tableau:
+echo ${tab[*]}
+# Liste de tous les indices des éléments définis
+echo ${!tab[*]}
+</code> </pre>
+                <pre><code class="hljs">
+# Utilisation dans une boucle
+for i in ${!tab[*]}
+do
+    echo "$i => ${tab[i]}"
+done
+                </code></pre>
+            </section>
+            <section>
+                <h2>Ajout d'un élément</h2>
+                <pre><code class="hljs">
+tab=( un deux trois )
+echo ${#tab[*]}
+3
+# Ajout en fin de tableau
+tab[${#tab[*]}]=fin
+$ echo ${tab[*]}
+un deux trois fin
+# Ajout en début de tableau
+$ tab=( debut ${tab[*]} )
+$ echo ${tab[*]}
+debut un deux trois fin
+</code> </pre>
+            </section>
+        </section>
+    </div>
+</div>
+
+<script src="lib/js/head.min.js"></script>
+<script src="js/reveal.js"></script>
+
+<script>
+    // More info about config & dependencies:
+    // - https://github.com/hakimel/reveal.js#configuration
+    // - https://github.com/hakimel/reveal.js#dependencies
+    Reveal.initialize({
+        // Bounds for smallest/largest possible scale to apply to content
+        minScale: 0.2,
+        maxScale: 1.5,
+        // Display the page number of the current slide
+        slideNumber: true,
+        zoomKey: 'shift',
+        dependencies: [
+            {src: 'plugin/markdown/marked.js'},
+            {src: 'plugin/markdown/markdown.js'},
+            {src: 'plugin/notes/notes.js', async: true},
+            {
+                src: 'plugin/highlight/highlight.js', async: true, callback: function () {
+                hljs.initHighlightingOnLoad();
+            }
+            }
+        ]
+    });
+</script>
+</body>
+</html>
