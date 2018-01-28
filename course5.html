@@ -1,0 +1,160 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+    <title>Cours BASH</title>
+
+    <link rel="stylesheet" href="css/reveal.css">
+    <link rel="stylesheet" href="css/theme/black.css">
+
+    <!-- Theme used for syntax highlighting of code -->
+    <link rel="stylesheet" href="lib/css/zenburn.css">
+
+    <!-- Printing and PDF exports -->
+    <script>
+        var link = document.createElement('link');
+        link.rel = 'stylesheet';
+        link.type = 'text/css';
+        link.href = window.location.search.match(/print-pdf/gi) ? 'css/print/pdf.css' : 'css/print/paper.css';
+        document.getElementsByTagName('head')[0].appendChild(link);
+    </script>
+</head>
+<body>
+<div class="reveal">
+    <div class="slides">
+        <section>
+            <h2>BASH: Les fonctions</h2>
+            <p class="fragment highlight-green visible">ludovic.drouineau@isen-ouest.yncrea.fr</p>
+            <p>CIR3 2017-2018</p>
+        </section>
+        <section>
+            <h2>Définition d'une fonction</h2>
+            <pre><code class="hljs">
+function function_name {
+command...
+}
+
+# ou de préférence:
+function_name () {
+command...
+}
+            </code></pre>
+            <pre><code class="hljs">
+fun () { echo "This is a function"; echo; }
+            </code></pre>
+        </section>
+        <section>
+            <h2>Où définir la fonction</h2>
+            <p style="color: #d33682">Avant son utilisation</p>
+            <pre><code class="hljs">
+# !/bin/bash
+echo Appel Avant definition de fct
+fct # fct non definie
+function fct
+{
+echo Execution de : fct
+sleep 2
+echo Fin Execution de : fct
+}
+echo Appel Apres definition de fct
+fct # fct definie
+            </code></pre>
+        </section>
+        <section>
+            <h2>Suppression d'un fonction</h2>
+            <pre><code class="hljs">
+declare -F
+declare -f f0
+declare -f f1
+
+unset -f f1
+
+declare -F
+declare -f f0 => la fonction f1 n’existe plus !
+            </code></pre>
+        </section>
+        <section>
+            <h2>Argument d'une fonction</h2>
+            <pre><code class="hljs">
+#!/bin/bash
+f()
+{
+    echo " --- Dans f : \$0 : $0"
+    echo " --- Dans f : \$# : $#"
+    echo " --- Dans f : \$1 : $1" => affichage du 1er argument de la
+                                     fonction f
+}
+echo "Avant f : \$0 : $0"
+echo "Avant f : \$# : $#"
+echo "Avant f : \$1 : $1" => affichage du 1er argument du
+                             programme args
+f pierre paul jacques
+echo "Apres f : \$1 : $1" => affichage du 1er argument du
+                             programme args
+            </code></pre>
+        </section>
+        <section>
+            <h2>Variable locale</h2>
+            <p style="color: #71e9f4">Par défaut toute variable est globale</p>
+            <pre><code class="hljs">
+f1()
+{
+    local -i a=12 => a est une variable locale à f1
+    (( a++ ))
+    echo "-- Dans f1 : a => $a"
+}
+            </code></pre>
+            <p style="color: #71e9f4">Une variable locale est connue pour toutes les fonctions appelées</p>
+        </section>
+        <section>
+            <h2>Utilisation de librairies: source</h2>
+            <pre><code class="hljs">
+#!/bin/bash
+source def_f # ou plus court : . def_f
+# Permissions de def_f : r--r--r—
+x=2
+f # appel de la fonction f contenue dans def_f
+
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+def_f
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#!/bin/bash
+function f()
+{
+echo $((x+2))
+}
+            </code></pre>
+        </section>
+    </div>
+</div>
+
+<script src="lib/js/head.min.js"></script>
+<script src="js/reveal.js"></script>
+
+<script>
+    // More info about config & dependencies:
+    // - https://github.com/hakimel/reveal.js#configuration
+    // - https://github.com/hakimel/reveal.js#dependencies
+    Reveal.initialize({
+        // Bounds for smallest/largest possible scale to apply to content
+        minScale: 0.2,
+        maxScale: 1.5,
+        // Display the page number of the current slide
+        slideNumber: true,
+        zoomKey: 'shift',
+        dependencies: [
+            {src: 'plugin/markdown/marked.js'},
+            {src: 'plugin/markdown/markdown.js'},
+            {src: 'plugin/notes/notes.js', async: true},
+            {
+                src: 'plugin/highlight/highlight.js', async: true, callback: function () {
+                hljs.initHighlightingOnLoad();
+            }
+            }
+        ]
+    });
+</script>
+</body>
+</html>

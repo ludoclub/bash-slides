@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
-    <title>Cours BASH</title>
+    <title>Cours BASH: Gestion des paramètres</title>
 
     <link rel="stylesheet" href="css/reveal.css">
     <link rel="stylesheet" href="css/theme/black.css">
@@ -25,41 +25,69 @@
 <div class="reveal">
     <div class="slides">
         <section>
-            <h2>BASH: Opérations arithmétiques</h2>
+            <h2>BASH: Gestion des paramètres</h2>
             <p class="fragment highlight-green visible">ludovic.drouineau@isen-ouest.yncrea.fr</p>
             <p>CIR3 2017-2018</p>
         </section>
         <section>
-            <h2>Opérateur ((</h2>
-            <pre><code class="hljs">
-#!/bin/bash
-declare -i i=0
-while (( i < 10 ))
-do
- echo $i
- (( i = i + 1 )) # ou(( i++ ))
-done
-            </code></pre>
-            <pre><code class="hljs">
-declare -i x=9 y
-(( y = x++ )) => y reçoit la valeur 9 ; x vaut 10
-echo "y=$y x=$x"
-y=9 x=10
-            </code></pre>
+            <h2>Les paramètres spéciaux</h2>
+            <ul style="color: #efef8f">
+                <li>$0 Contient le nom du script tel qu'il a été invoqué</li>
+                <li>$* L'ensembles des paramètres sous la forme d'un seul argument</li>
+                <li>$@ L'ensemble des arguments, un argument par paramètre</li>
+                <li>$# Le nombre de paramètres passés au script</li>
+                <li>$? Le code retour de la dernière commande</li>
+                <li>$$ Le PID su shell qui exécute le script</li>
+                <li>$! Le PID du dernier processus lancé en arrière-plan</li>
+            </ul>
         </section>
         <section>
-            <h2>Utilisation dans un for</h2>
+            <h2>La commande set</h2>
+            <p> Affecter des paramètres au shell</p>
             <pre><code class="hljs">
-declare -i x
-for (( x=0 ; x<5 ; x++ ))
+set param1 param2 param3
+echo $1 $2 $3
+            </code> </pre>
+            <pre><code class="hljs">
+IFS=":"; set $(grep $USER /etc/passwd)
+echo -e "Login :\t$1\nNom :\t$5\nID :\t$3\nGroup :\t$4\nShell :\t$7"
+            </code> </pre>
+        </section>
+        <section>
+            <h2>La commande shift</h2>
+            <p>Permet de décaler les paramètres</p>
+            <pre><code class="hljs">
+#!/bin/bash
+while [ $# -ne 0 ]
 do
- echo $(( x*2 ))
+ echo $1
+ shift
 done
-declare -i x y
-for (( x=1,y=10 ; x<4 ; x++,y-- ))
-do
- echo $(( x*y ))
+            </code> </pre>
+        </section>
+        <section>
+            <h2>La commande getopts</h2>
+            <pre><code class="hljs">
+#!/bin/bash
+OPTIND=1
+outputfile=""
+verbose=0
+function show_help
+{
+ echo "Usage : "
+ echo " ${0#*/} -h : print this help"
+ echo " ${0#*/} -v : verbose "
+ echo " ${0#*/} -f : output file"
+}
+while getopts "h?vf:" opt; do
+ case $opt in
+ h|\?) show_help
+ exit 0 ;;
+ v) verbose=1 ;;
+ f) output_file=$OPTARG ;;
+ esac
 done
+echo "verbose=$verbose, output_file=$output_file, leftovers: $@"
             </code></pre>
         </section>
     </div>
