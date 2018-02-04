@@ -1,0 +1,225 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+    <title>Cours BASH: Quelques trucs utiles</title>
+
+    <link rel="stylesheet" href="css/reveal.css">
+    <link rel="stylesheet" href="css/theme/black.css">
+
+    <!-- Theme used for syntax highlighting of code -->
+    <link rel="stylesheet" href="lib/css/zenburn.css">
+
+    <!-- Printing and PDF exports -->
+    <script>
+        var link = document.createElement('link');
+        link.rel = 'stylesheet';
+        link.type = 'text/css';
+        link.href = window.location.search.match(/print-pdf/gi) ? 'css/print/pdf.css' : 'css/print/paper.css';
+        document.getElementsByTagName('head')[0].appendChild(link);
+    </script>
+</head>
+<body>
+<div class="reveal">
+    <div class="slides">
+        <section>
+            <h2>Trucs utiles</h2>
+            <p class="fragment highlight-green visible">ludovic.drouineau@isen-ouest.yncrea.fr</p>
+            <p>CIR3 2017-2018</p>
+        </section>
+        <section>
+            <h2>Lire un fichier</h2>
+            <pre><code class="hljs">
+for line in $(cat file.txt)
+do
+    echo "$line"
+done
+            </code> </pre>
+            <pre><code class="hljs">
+while read line
+do
+    echo "$line"
+done < file.txt
+            </code> </pre>
+<pre><code class="hljs">
+while read line
+do
+    echo "Word count per line: $line"
+done < <(cat list-of-dirs.txt | wc -w)
+</code></pre>
+        </section>
+        <section>
+            <h2>Internal File Separator: IFS</h2>
+<pre><code class="hljs">
+#!/bin/bash
+OLDIFS=$IFS
+IFS=:
+liste="bonjour:hello:morning"
+for l in $liste
+do
+    echo $l
+done
+</code> </pre>
+        </section>
+        <section>
+            <h2>Mulitplexeur de terminaux: screen</h2>
+            <pre><code class="hljs">
+# Lancement:
+screen -S name
+
+# Rattachement
+screen -r name
+
+# Lister les screen
+screen -ls
+</code></pre>
+        </section>
+        <section>
+            <section>
+                <h2>Une IHM sous bash</h2>
+                <pre><code class="hljs">
+apt-get install dialog
+                </code></pre>
+                <pre><code class="hljs">
+#!/bin/bash
+DIALOG=${DIALOG=dialog}
+$DIALOG --title " Mon premier dialog" --clear \
+--yesno "Bonjour, ceci est mon premier programme dialog" 10 30
+case $? in
+    0) echo "Oui choisi. ";;
+    1) echo "Non choisi. ";;
+    255) echo "Appuyé sur Echap. ";;
+esac
+                </code> </pre>
+            </section>
+            <section>
+                <h2>Input dialog</h2>
+                <pre><code class="hljs">
+#!/bin/bash
+DIALOG=${DIALOG=dialog}
+fichtemp=`tempfile 2>/dev/null` || fichtemp=/tmp/test$$
+
+trap "rm -f $fichtemp" 0 1 2 5 15
+
+$DIALOG --title "Ma fenêtre d'entrée" --clear \
+ --inputbox "Bonjour, voici un exemple de fenêtre d'entrée\n
+Essayez de saisir votre nom ci-dessous:" 16 51 2> $fichtemp
+
+valret=$?
+
+case $valret in
+    0) echo "La chaîne d'entrée est `cat $fichtemp`";;
+    1) echo "Appuyé sur Annuler.";;
+    255) if test -s $fichtemp ; then
+            cat $fichtemp
+        else
+            echo "Appuyé sur Echap."
+        fi ;;
+esac
+                </code></pre>
+            </section>
+            <section>
+                <h2>Construire un menu</h2>
+<pre> <code class="hljs">
+#!/bin/sh
+DIALOG=${DIALOG=dialog}
+fichtemp=`tempfile 2>/dev/null` || fichtemp=/tmp/test$$
+
+trap "rm -f $fichtemp" 0 1 2 5 15
+$DIALOG --clear --title "Mon jeu prefere" \
+ --menu "Bonjour, choisissez votre jeu prefere :" 60 50 10 \
+ "Gradius" "Gradius III - SNES" \
+ "Probotector" "Probotector - SNES" \
+ "Castlevania" "Castlevania - NES" \
+ "Alex" "Alex Kid - Master System" \
+ "Zelda" "Zelda, A link to the past - SNES" \
+ "Slug" "Metal Slug - Neo Geo" 2> $fichtemp
+valret=$?
+choix=`cat $fichtemp`
+case $valret in
+ 0) echo "'$choix' est votre jeu préféré";;
+ 1) echo "Appuyé sur Annuler";;
+ 255) echo "Appuyé sur Echap.";;
+esac
+
+</code> </pre>
+            </section>
+            <section>
+                <h2>Liste radio button</h2>
+                <pre> <code class="hljs">
+#!/bin/bash
+DIALOG=${DIALOG=dialog}
+fichtemp=`tempfile 2>/dev/null` || fichtemp=/tmp/test$$
+
+trap "rm -f $fichtemp" 0 1 2 5 15
+
+$DIALOG --backtitle "Choisissez votre jeu prefere" \
+--title "Mon jeu prefere" --clear \
+ --radiolist "Bonjour, vous pouvez choisir votre jeu prefere ici " 20 61 5 \
+ "Gradius" "Gradius III - SNES" off \
+ "Probotector" "Probotector - SNES" off\
+ "Castlevania" "Castlevania - NES" off\
+ "Alex" "Alex Kid - Master System" ON\
+ "Zelda" "Zelda, A link to the past - SNES" off\
+ "Slug" "Metal Slug - Neo Geo" off 2> $fichtemp
+
+valret=$?
+
+choix=`cat $fichtemp`
+
+case $valret in
+ 0) echo "'$choix' est votre jeu préféré";;
+ 1) echo "Appuyé sur Annuler.";;
+ 255) echo "Appuyé sur Echap.";;
+esac
+
+</code> </pre>
+            </section>
+            <section>
+                <h2>Sélection de fichier</h2>
+<pre><code class="hljs">
+#!/bin/bash
+DIALOG=${DIALOG=dialog}
+fichier=`$DIALOG --stdout --title "Choisissez un fichier" --fselect $HOME/ 14 48`
+
+case $? in
+    0) echo "\"$fichier\" choisi";;
+    1) echo "Appuyé sur Annuler.";;
+    255) echo "Fenêtre fermée.";;
+esac
+</code> </pre>
+            </section>
+        </section>
+    </div>
+</div>
+
+<script src="lib/js/head.min.js"></script>
+<script src="js/reveal.js"></script>
+
+<script>
+    // More info about config & dependencies:
+    // - https://github.com/hakimel/reveal.js#configuration
+    // - https://github.com/hakimel/reveal.js#dependencies
+    Reveal.initialize({
+        // Bounds for smallest/largest possible scale to apply to content
+        minScale: 0.2,
+        maxScale: 1.5,
+        // Display the page number of the current slide
+        slideNumber: true,
+        zoomKey: 'shift',
+        dependencies: [
+            {src: 'plugin/markdown/marked.js'},
+            {src: 'plugin/markdown/markdown.js'},
+            {src: 'plugin/notes/notes.js', async: true},
+            {
+                src: 'plugin/highlight/highlight.js', async: true, callback: function () {
+                hljs.initHighlightingOnLoad();
+            }
+            }
+        ]
+    });
+</script>
+</body>
+</html>

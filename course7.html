@@ -1,0 +1,214 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+    <title>Cours BASH: Gestion des paramètres</title>
+
+    <link rel="stylesheet" href="css/reveal.css">
+    <link rel="stylesheet" href="css/theme/black.css">
+
+    <!-- Theme used for syntax highlighting of code -->
+    <link rel="stylesheet" href="lib/css/zenburn.css">
+
+    <!-- Printing and PDF exports -->
+    <script>
+        var link = document.createElement('link');
+        link.rel = 'stylesheet';
+        link.type = 'text/css';
+        link.href = window.location.search.match(/print-pdf/gi) ? 'css/print/pdf.css' : 'css/print/paper.css';
+        document.getElementsByTagName('head')[0].appendChild(link);
+    </script>
+</head>
+<body>
+<div class="reveal">
+    <div class="slides">
+        <section>
+            <h2>BASH: AWK</h2>
+            <p class="fragment highlight-green visible">ludovic.drouineau@isen-ouest.yncrea.fr</p>
+            <p>CIR3 2017-2018</p>
+        </section>
+        <section>
+            <h2>Histoire</h2>
+            <p>1979: Alfred <b>A</b>ho, Peter <b>W</b>einberger, Brian <b>K</b>ernighan</p>
+            <pre><code class="hljs">
+awk -W version
+            </code> </pre>
+            <p>Traitement des lignes d'un fichier</p>
+        </section>
+        <section>
+            <h2>Workflow</h2>
+            <img src="cir3/images/awk_workflow.jpg">
+        </section>
+        <section>
+            <h2>Examples</h2>
+            <pre><code class="hljs">
+# Affichage d'un champ d'une ligne
+awk '{print $1}' input_file
+
+# Affichage de ligne contenant une chaine spécifique
+awk '/MA/' input_file
+# Combinaison des 2
+awk '/MA/ { print $1 }' list
+
+# Spécification du délimiteur
+awk –F, '/MA/ { print $1 }' list
+awk 'BEGIN {FS=,} /MA/ { print $1 $2}'
+
+# Afficher les champs sur une même ligne
+awk –F, '/MA/ { print $1,$2,$3 }' list
+
+# Utilisation de variables
+echo a b c d | awk 'BEGIN { one = 1; two = 2 }
+{ print $(one + two)}'
+
+            </code></pre>
+        </section>
+        <section>
+            <section>
+                <h2>Pattern matching</h2>
+                <pre><code class="hljs">
+# test for integer, string or empty line.
+/[0-9]+/ { print "That is an integer" }
+/[A-Za-z]+/ { print "This is a string" }
+/^$/ { print "This is a blank line." }
+                </code> </pre>
+
+            </section>
+            <section>
+                <h2>Quelques exemples avancés</h2>
+                <pre><code class="hljs">
+
+john 85 92 78 94 88
+andrea 89 90 75 90 86
+jasper 84 88 80 92 84
+
+
+# average five grades
+{ total = $2 + $3 + $4 + $5 + $6
+avg = total / 5
+print $1, avg }
+
+awk -f script notes.txt
+                </code> </pre>
+            </section>
+            <section>
+                <h2>Quelques exemples avancés</h2>
+                <pre><code class="hljs">
+
+{ total = $2 + $3 + $4 + $5 + $6
+avg = total / 5
+if (avg >= 90) grade = "A"
+else if (avg >= 80) grade = "B"
+else if (avg >= 70) grade = "C"
+else if (avg >= 60) grade = "D"
+else grade = "F"
+print $1, grade }
+
+                </code> </pre>
+            </section>
+            <section>
+                <h2>Les boucles</h2>
+<pre><code class="hljs">
+==========================
+i = 1
+while ( i <= 4 ) {
+    print $i
+    ++i
+}
+==========================
+BEGIN {
+    do {
+        ++x
+        print x
+    } while ( x <= 4 )
+}
+==========================
+for ( i = NF; i >= 1; i-- )
+print $i
+
+</code></pre>
+            </section>
+            <section>
+                <h2>Les tableaux</h2>
+                <pre><code class="hljs">
+{
+    total = $2 + $3 + $4 + $5 + $6
+    avg = total / 5
+    student_avg[NR] = avg
+}
+END {
+    for ( x = 1; x <= NR; x++ )
+        class_avg_total += student_avg[x]
+
+    class_average = class_avg_total / NR
+    for ( x = 1; x <= NR; x++ )
+        if (student_avg[x] >= class_average)
+            ++above_average
+        else
+            ++below_average
+    print "Class Average: ", class_average
+    print "At or Above Average: ", above_average
+    print "Below Average: ", below_average
+}
+
+</code></pre>
+            </section>
+            <section>
+                <h2>Correction utilisateurs connectés sans doublons</h2>
+                <pre><code class="hljs">
+{
+    users[NR] = $1
+}
+END {
+    diff_users[1]=user[1]
+    k=1
+    for (i=1; i<=NR; i++) {
+        for (j=1; j<=k; j++) {
+            if (diff_users[j]==users[i])
+                break;
+        }
+        if (j==k+1) {
+            k++
+            diff_users[k]=users[i]
+        }
+    }
+    for (i=1; i<=k; i++) {
+        print diff_users[i]
+    }
+}
+                </code></pre>
+        </section>
+        </section>
+    </div>
+</div>
+
+<script src="lib/js/head.min.js"></script>
+<script src="js/reveal.js"></script>
+
+<script>
+    // More info about config & dependencies:
+    // - https://github.com/hakimel/reveal.js#configuration
+    // - https://github.com/hakimel/reveal.js#dependencies
+    Reveal.initialize({
+        // Bounds for smallest/largest possible scale to apply to content
+        minScale: 0.2,
+        maxScale: 1.5,
+        // Display the page number of the current slide
+        slideNumber: true,
+        zoomKey: 'shift',
+        dependencies: [
+            {src: 'plugin/markdown/marked.js'},
+            {src: 'plugin/markdown/markdown.js'},
+            {src: 'plugin/notes/notes.js', async: true},
+            {
+                src: 'plugin/highlight/highlight.js', async: true, callback: function () {
+                hljs.initHighlightingOnLoad();
+            }
+            }
+        ]
+    });
+</script>
+</body>
+</html>
