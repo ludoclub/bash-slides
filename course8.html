@@ -64,6 +64,34 @@ done
 </code> </pre>
         </section>
         <section>
+            <h2>Combinaison des 2:</h2>
+            <pre><code class="hljs">
+#!/bin/bash
+
+OLDIFS=$IFS
+IFS=:
+
+while read line; do
+    for l in $line
+    do
+        echo -n "$l "
+    done
+    echo ""
+done < $1
+IFS=$OLDIFS
+</code> </pre>
+        </section>
+        <section>
+            <h2>Quelques commandes</h2>
+            <ul>
+                <li>cut : découpage selon un délimiteur</li>
+                <li>head / tail : lecture début ou fin d'un fichier</li>
+                <li>sort : tri alphabétique, numérique, ...</li>
+                <li>uniq : gestion des doublons</li>
+                <li>etc... : "info coreutils"</li>
+            </ul>
+        </section>
+        <section>
             <h2>Mulitplexeur de terminaux: screen</h2>
             <pre><code class="hljs">
 # Lancement:
