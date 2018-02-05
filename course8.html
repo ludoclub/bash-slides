@@ -94,9 +94,9 @@ IFS=$OLDIFS
         <section>
             <h2>Redirection</h2>
             <ul>
-                <li>ls > list.txt</li>
+                <li>ls /root ~/ > list.txt</li>
                 <li>ls /root ~/ 2> /dev/null</li>
-                <li>ls /root ~/ 2>&1 /dev/null</li>
+                <li>ls /root ~/ > list.txt 2>&1</li>
             </ul>
         </section>
         <section>
