@@ -47,7 +47,7 @@ done < file.txt
 while read line
 do
     echo "Word count per line: $line"
-done < <(cat list-of-dirs.txt | wc -w)
+done < $(cat list-of-dirs.txt | wc -w)
 </code></pre>
         </section>
         <section>
@@ -160,7 +160,7 @@ esac
             <section>
                 <h2>Construire un menu</h2>
 <pre> <code class="hljs">
-#!/bin/sh
+#!/bin/bash
 DIALOG=${DIALOG=dialog}
 fichtemp=`tempfile 2>/dev/null` || fichtemp=/tmp/test$$
 
